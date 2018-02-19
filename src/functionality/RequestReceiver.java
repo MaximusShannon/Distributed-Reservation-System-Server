@@ -2,6 +2,7 @@ package functionality;
 
 import models.ResponseMessage;
 import models.User;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -26,7 +27,7 @@ public class RequestReceiver {
 
         try{
             serverSocket = new ServerSocket(4045);
-            System.out.println("Socket Established @ receiveRegisterRequest");
+            System.out.println("Socket Established @ awaiting Register requests...");
 
 
             while(true){
@@ -58,8 +59,12 @@ public class RequestReceiver {
 
         try{
 
+            DatabaseInteractionService dbService = new DatabaseInteractionService();
+            User tempUser = new User();
+            User userRetrieved = null;
+
             serverSocket = new ServerSocket(port);
-            System.out.println("Socket Established @ receiveLoginRequest");
+            System.out.println("Socket Established @ awaiting Login requests...");
 
             while (true){
                 Socket clientSocket = serverSocket.accept();
@@ -67,10 +72,24 @@ public class RequestReceiver {
                 ObjectInputStream inFromClient = new ObjectInputStream(clientSocket.getInputStream());
 
                 LoginRequest recievedRequest = (LoginRequest) inFromClient.readObject();
-                System.out.println("Object Read:  request username: " + recievedRequest.getUsername());
 
-                authenticatedUser = authenticateLoginRequest(recievedRequest);
-                outToClient.writeObject(authenticatedUser);
+                System.out.println(recievedRequest.getUsername());
+
+                tempUser.setEmail(recievedRequest.getUsername());
+                tempUser.setPassword(recievedRequest.getPassword());
+
+                if(dbService.checkDoesUserExist(tempUser)){
+
+                    userRetrieved = dbService.getExistingUser(tempUser.getEmail());
+
+                    if(BCrypt.checkpw(tempUser.getPassword(), userRetrieved.getPassword())){
+
+                        outToClient.writeObject(userRetrieved);
+                    }
+
+                }else {
+                    outToClient.writeObject(userRetrieved);
+                }
 
                 clientSocket.close();
             }
@@ -80,19 +99,4 @@ public class RequestReceiver {
 
     }
 
-    private User authenticateLoginRequest(LoginRequest requestReceived) {
-
-        boolean exists;
-        User retreivedUser = null;
-        DatabaseConnection dbConnection = new DatabaseConnection();
-
-        exists = dbConnection.checkIfUserExists(requestReceived.getUsername());
-
-        if (exists) {
-            retreivedUser = dbConnection.retreiveUser(requestReceived.getUsername());
-        }
-
-        return retreivedUser;
-
-    }
 }

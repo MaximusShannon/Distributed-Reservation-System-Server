@@ -1,6 +1,8 @@
 package models;
 
-public class Session {
+import java.io.Serializable;
+
+public class Session implements Serializable {
 
     static final long serialVersionUID = 3L;
     private User user;

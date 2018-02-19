@@ -14,8 +14,8 @@ public class ServerStart {
 
         Thread loginThread = new Thread(runnable);
         loginThread.start();
-        //Thread registerThread = new Thread(registerRunnable);
-       // registerThread.start();
+        Thread registerThread = new Thread(registerRunnable);
+        registerThread.start();
 
     }
 }

@@ -32,7 +32,7 @@ public class DatabaseInteractionService {
 
                 if(userList.get(i).getEmail().equals(userReceived.getEmail())){
                     exists = true;
-                    em.close();
+
                 }
             }
         }
@@ -73,6 +73,23 @@ public class DatabaseInteractionService {
                 userList.add(placeHolderUser);
             }
         }
+    }
+
+    public User getExistingUser(String email){
+
+        User userFound = null;
+
+        if(userList.size() > 0){
+
+            for(int i = 0; i < userList.size(); i++){
+
+                if(userList.get(i).getEmail().equals(email)){
+                    userFound = userList.get(i);
+                }
+            }
+        }
+        return userFound;
+
     }
 
 }
