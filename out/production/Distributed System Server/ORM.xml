@@ -1,0 +1,52 @@
+<? xml version="1.0" encoding="UTF-8" ?>
+
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
+   http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
+                 version="1.0">
+
+    <description> XML Mapping file</description>
+
+    <entity class="models.User">
+        <table name="UserTable"/>
+
+        <attributes>
+
+            <id name="id">
+                <generated-value strategy="TABLE"/>
+            </id>
+
+            <basic name="fName" attribute-type = "String">
+                <column name="FirstName" length="15"/>
+            </basic>
+
+            <basic name="sName" attribute-type = "String">
+                <column name ="SecondName" length="15"/>
+            </basic>
+
+            <basic name="role" attribute-type = "String">
+                <column name ="Role" length="15"/>
+            </basic>
+
+            <basic name="mobileNo" attribute-type = "String">
+                <column name ="MobileNo" length="15"/>
+            </basic>
+
+            <basic name="email" attribute-type = "String">
+                <column name ="Email" length="30"/>
+            </basic>
+
+            <basic name="userType" attribute-type = "String">
+                <column name ="UserType" length="30"/>
+            </basic>
+
+            <basic name="password" attribute-type = "String">
+                <column name ="Password" length="100"/>
+            </basic>
+
+
+        </attributes>
+    </entity>
+
+</entity-mappings>
